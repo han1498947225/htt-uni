@@ -4,62 +4,59 @@
 		<search></search>
 		<!-- tab栏 -->
 		<div class="nav-tab">
-			<p class="active">热门回答</p>
-			<p>最新问题</p>
-			<p>等待回答</p>
+			<p @click="tohot(0)" :class="{active:i==0}">热门回答</p>
+			<p @click="tohot(1)" :class="{active:i==1}">最新问题</p>
+			<p @click="tohot(2)" :class="{active:i==2}">等待回答</p>
 		</div>
 		<!-- 内容 -->
 		<div class="content">
-			<div class="list">
-				<h4>被给万年飞牛网好阿额偶给你哇卡临汾爱哦</h4>
-				<p><span>9回答·50浏览</span><span>甜甜·2003年4月28日</span></p>
-			</div>
-			<div class="list">
-				<h4>被给万年飞牛网好阿额偶给你哇卡临汾爱哦</h4>
-				<p><span>9回答·50浏览</span><span>甜甜·2003年4月28日</span></p>
-			</div>
-			<div class="list">
-				<h4>被给万年飞牛网好阿额偶给你哇卡临汾爱哦</h4>
-				<p><span>9回答·50浏览</span><span>甜甜·2003年4月28日</span></p>
-			</div>
-			<div class="list">
-				<h4>被给万年飞牛网好阿额偶给你哇卡临汾爱哦</h4>
-				<p><span>9回答·50浏览</span><span>甜甜·2003年4月28日</span></p>
-			</div>
-			<div class="list">
-				<h4>被给万年飞牛网好阿额偶给你哇卡临汾爱哦</h4>
-				<p><span>9回答·50浏览</span><span>甜甜·2003年4月28日</span></p>
-			</div>
-			<div class="list">
-				<h4>被给万年飞牛网好阿额偶给你哇卡临汾爱哦</h4>
-				<p><span>9回答·50浏览</span><span>甜甜·2003年4月28日</span></p>
-			</div>
-			<div class="list">
-				<h4>被给万年飞牛网好阿额偶给你哇卡临汾爱哦</h4>
-				<p><span>9回答·50浏览</span><span>甜甜·2003年4月28日</span></p>
-			</div>
-			<div class="list">
-				<h4>被给万年飞牛网好阿额偶给你哇卡临汾爱哦</h4>
-				<p><span>9回答·50浏览</span><span>甜甜·2003年4月28日</span></p>
-			</div>
-			<div class="list">
-				<h4>被给万年飞牛网好阿额偶给你哇卡临汾爱哦</h4>
-				<p><span>9回答·50浏览</span><span>甜甜·2003年4月28日</span></p>
-			</div>
-			<div class="list">
-				<h4>被给万年飞牛网好阿额偶给你哇卡临汾爱哦</h4>
-				<p><span>9回答·50浏览</span><span>甜甜·2003年4月28日</span></p>
+			<div class="list" v-for="item,index in hotdata" :key="index">
+				<h4>{{item.title}}</h4>
+				<p><span>{{item.reply}}回答·{{item.viewCount}}浏览</span><span>{{item.nickName}}·{{item.createDate}}</span></p>
 			</div>
 		</div>
 	</view>
 </template>
 
 <script>
+	import {newanswer} from '@/api/question.js'
+	import {etcanswer} from '@/api/question.js'
+	import { reactive,toRefs } from 'vue'
+	import {hotanswer} from '@/api/question.js'
 	export default {
-		data() {
+		setup() {
+			const data=reactive({
+				hotdata:[],//热门回答
+				i:0,
+			})
+			const tohot=(index)=>{
+				data.i=index
+				if(index==0){
+					// 热门回答
+					hotanswer().then(res=>{
+						data.hotdata=res.data.records
+					})
+				}else if(index==1){
+					// 最新问题
+					newanswer().then(res=>{
+						data.hotdata=res.data.records
+					})
+				}else{
+					// 等待回答
+					etcanswer().then(res=>{
+						data.hotdata=res.data.records
+					})
+				}
+			}
+			// 热门回答
+			hotanswer().then(res=>{
+				console.log(res);
+				data.hotdata=res.data.records
+			})
 			return {
-				
-			};
+				tohot,
+				...toRefs(data)
+			}
 		}
 	}
 </script>

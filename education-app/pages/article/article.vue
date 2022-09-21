@@ -3,63 +3,28 @@
 		<!-- 搜索框模块 -->
 		<search></search>
 		<!-- tab栏 -->
-		<div class="nav-tab">
-			<p class="active">推荐</p>
-			<p>java</p>
-			<p>前端</p>
-			<p>云计算</p>
-			<p>运维</p>
-		</div>
+		<scroll-view scroll-x="true">
+			<div class="nav-tab">
+				<div class="item">
+					<p :class="{active:i==null}" @click="totab(null,null)">推荐</p>
+					<p v-for="item,index in tabarticle" :key="index" @click="totab(item.id,index)"
+						:class="{active:index==i}">
+						{{item.name}}
+					</p>
+				</div>
+			</div>
+		</scroll-view>
 		<!-- 内容 -->
 		<div class="content">
-			<div class="hot-content">
+			<div class="hot-content" v-for="item,index in recommend" :key="index">
 				<div class="text">
-					<h5>做信封纸非建安费安静啊你发空间发你</h5>
-					<p><span class="head"></span><span class="name">甜甜kflanfeafal;amss</span></p>
-					<p><span class="price">免费</span><span class="time">164人在学</span></p>
+					<h5>{{item.title}}</h5>
+					<p class="time">{{item.summary}}</p>
+					<p><span class="head"></span><span class="name">{{item.nickName}}</span></p>
+					<p><span class="price">免费</span><span class="time">{{item.viewCount}}人在学</span></p>
 				</div>
-				<div class="img-box">
-					<img src="/static/images/banner1.jpg" alt="">
-				</div>
-			</div>
-			<div class="hot-content">
-				<div class="text">
-					<h5>做信封纸非建安费安静啊你发空间发你</h5>
-					<p><span class="head"></span><span class="name">甜甜kflanfeafal;amss</span></p>
-					<p><span class="price">免费</span><span class="time">164人在学</span></p>
-				</div>
-				<div class="img-box">
-					<img src="/static/images/banner1.jpg" alt="">
-				</div>
-			</div>
-			<div class="hot-content">
-				<div class="text">
-					<h5>做信封纸非建安费安静啊你发空间发你</h5>
-					<p><span class="head"></span><span class="name">甜甜kflanfeafal;amss</span></p>
-					<p><span class="price">免费</span><span class="time">164人在学</span></p>
-				</div>
-				<div class="img-box">
-					<img src="/static/images/banner1.jpg" alt="">
-				</div>
-			</div>
-			<div class="hot-content">
-				<div class="text">
-					<h5>做信封纸非建安费安静啊你发空间发你</h5>
-					<p><span class="head"></span><span class="name">甜甜kflanfeafal;amss</span></p>
-					<p><span class="price">免费</span><span class="time">164人在学</span></p>
-				</div>
-				<div class="img-box">
-					<img src="/static/images/banner1.jpg" alt="">
-				</div>
-			</div>
-			<div class="hot-content">
-				<div class="text">
-					<h5>做信封纸非建安费安静啊你发空间发你</h5>
-					<p><span class="head"></span><span class="name">甜甜kflanfeafal;amss</span></p>
-					<p><span class="price">免费</span><span class="time">164人在学</span></p>
-				</div>
-				<div class="img-box">
-					<img src="/static/images/banner1.jpg" alt="">
+				<div class="img-box" v-show="item.imageUrl">
+					<img :src="item.imageUrl" alt="">
 				</div>
 			</div>
 		</div>
@@ -67,11 +32,50 @@
 </template>
 
 <script>
+	import {
+		recommend
+	} from '@/api/article.js'
+	import {
+		reactive,
+		toRefs
+	} from 'vue'
+	import {
+		tabarticle
+	} from '@/api/article.js'
 	export default {
-		data() {
+		setup() {
+			const data = reactive({
+				tabarticle: [], //tab数据
+				i: null, //下标
+				recommend: [] //推荐数据
+			})
+			// 高亮
+			const totab = (id, index) => {
+				if (index == null) {
+					data.i = null
+					recommend().then(res => {
+						data.recommend = res.data.records
+					})
+				} else {
+					data.i = index
+					recommend(id).then(res => {
+						data.recommend = res.data.records
+					})
+				}
+			}
+			// 推荐数据
+			recommend().then(res => {
+				data.recommend = res.data.records
+			})
+			// 导航栏数据
+			tabarticle().then(res => {
+				console.log(res);
+				data.tabarticle = res.data
+			})
 			return {
-
-			};
+				totab,
+				...toRefs(data)
+			}
 		}
 	}
 </script>
@@ -87,11 +91,13 @@
 		display: flex;
 
 		.img-box {
-			width: 350rpx;
-			margin: 24rpx;
+			width: 330rpx;
+			height: 175rpx;
+			margin: 24rpx 24rpx 20rpx 0;
 
 			img {
-				width: 100%;
+				width: 330rpx;
+				height: 175rpx;
 			}
 		}
 
@@ -100,6 +106,16 @@
 
 			h4 {
 				font-family: 600;
+			}
+
+			.name,
+			.head,
+			.time {
+				width: 350rpx;
+				color: #999;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 			}
 
 			p {
@@ -112,11 +128,7 @@
 					padding: 7rpx 5rpx 0 0;
 				}
 
-				.name,
-				.head,
-				.time {
-					color: #777;
-				}
+
 
 				.price {
 					font-size: 20rpx;
@@ -129,15 +141,19 @@
 	.nav-tab {
 		position: fixed;
 		top: 110rpx;
-		width: 100%;
+		left: 0;
 		height: 70rpx;
+		width: 10000rpx;
 		margin: 10rpx 0;
 		line-height: 70rpx;
 		background-color: #fff;
 
-		p {
-			float: left;
-			margin: 0 35rpx;
+		.item {
+			display: flex;
+
+			p {
+				margin: 0 35rpx;
+			}
 		}
 
 		.active {

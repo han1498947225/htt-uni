@@ -5,30 +5,41 @@
 		<!-- 热门搜索 -->
 		<p style="margin-top: 120rpx;">热门搜索</p>
 		<div class="box">
-			<div class="item">java</div>
-			<div class="item">java</div>
-			<div class="item">java</div>
-			<div class="item">java</div>
-			<div class="item">java</div>
-			<div class="item">java</div>
+			<div class="item" v-for="item,index in hotlist" :key="index" @click="hotsearch(item)">{{item}}</div>
 		</div>
-		<p><span>历史搜索</span><span>清空</span></p>
+		<p><span>历史搜索</span><span @click="clear">清空</span></p>
 		<div class="box">
-			<div class="item">java</div>
-			<div class="item">java</div>
-			<div class="item">java</div>
-			<div class="item">java</div>
-			<div class="item">java</div>
+			<div class="item" v-for="item,index in historylist" :key="index">{{item}}</div>
 		</div>
 	</view>
 </template>
 
 <script>
+	import { reactive,toRefs } from 'vue'
 	export default {
-		data() {
+		setup() {
+			const data=reactive({
+				hotlist:['java','Python','Vue.js','React','SpringBoot','SpringCloud'],//热门搜索
+				historylist:['java'],//历史搜索
+			})
+			// 点击
+			const hotsearch=(obj)=>{
+				if(data.historylist.find(item=>item==obj)){
+					return false
+				}
+				else{
+					data.historylist.push(obj)
+				}
+			}
+			// 清空
+			const clear=()=>{
+				data.historylist=[]
+			}
 			return {
-				
-			};
+				 hotsearch,
+				clear,
+				...toRefs(data)
+			}
 		}
 	}
 </script>
@@ -36,7 +47,7 @@
 <style lang="scss">
 p{
 	margin: 20rpx 10rpx;
-	font-weight: 600;
+	font-weight: 500;
 	display: flex;
 	justify-content: space-between;
 }
@@ -47,14 +58,14 @@ p{
 	.item{
 			float: left;
 			border: 1rpx solid #ccc;
-			width: 16%;
 			margin: 20rpx 5rpx;
 			height: 50rpx;
 			line-height: 50rpx;
-			padding: 5rpx;
+			padding: 5rpx 20rpx;
 			text-align: center;
-			border-radius: 35rpx;
+			border-radius: 25rpx;
 			font-size: 16rpx;			
+			color: #aaa;
 	}
 }
 </style>

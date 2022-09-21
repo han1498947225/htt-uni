@@ -1,18 +1,12 @@
 <template>
 	<view>
 		<!-- 搜索组件 -->
-		<search></search>
+		<search :Backgrounds="Backgrounds"></search>
 		<!-- 轮播图 -->
-		<banner></banner>
+		<banner @swiperItem="swiperItem"></banner>
 		<!-- nav -->
 		<div class="nav-box">
-			<div @click="tosearchplus">java</div>
-			<div>前端</div>
-			<div>云计算</div>
-			<div>运维</div>
-			<div>测试</div>
-			<div>UI设计</div>
-			<div>人工智能</div>
+			<div v-for="item,index in getnav" :key="index">{{item.name}}</div>
 			<div>全部分类</div>
 		</div>
 		<!-- 热门推荐 -->
@@ -24,52 +18,18 @@
 			</div>
 			<!-- 内容 -->
 			<scroll-view class="con-box" scroll-x="true">
-				<div class="hot-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-					</div>
-				</div>
-				<div class="hot-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-					</div>
-				</div>
-				<div class="hot-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-					</div>
-				</div>
-				<div class="hot-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
+				<div>
+					<div class="hot-content" v-for="item,index in getcourse" :key="index">
+						<div class="img-box">
+							<img :src="item.mainImage" alt="">
+						</div>
+						<div class="text">
+							<h5>{{item.title}}</h5>
+							<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
+									class="name">{{item.nickName}}</span></p>
+							<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
+										src="/static/fonticon/kaishi.png" alt="">{{item.commTotal}}人在学</span></p>
+						</div>
 					</div>
 				</div>
 			</scroll-view>
@@ -82,30 +42,20 @@
 				<p class="more">全部 ></p>
 			</div>
 			<!-- 内容 -->
-			<scroll-view class="pay-box" scroll-x="true">
-				<div class="pay-content">
+			<scroll-view scroll-x="true">
+				<div class="pay-box">
+				<div class="pay-content" v-for="item,index in getrecent" :key="index">
 					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
+						<img :src="item.mainImage" alt="">
 					</div>
 					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
+						<h5>{{item.title}}</h5>
 						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
+								class="name">{{item.nickName}}</span></p>
 						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
+									src="/static/fonticon/kaishi.png" alt="">{{item.commTotal}}人在学</span></p>
 					</div>
 				</div>
-				<div class="pay-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-					</div>
 				</div>
 			</scroll-view>
 		</div>
@@ -118,52 +68,18 @@
 			</div>
 			<!-- 内容 -->
 			<scroll-view class="con-box" scroll-x="true">
-				<div class="hot-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-					</div>
-				</div>
-				<div class="hot-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-					</div>
-				</div>
-				<div class="hot-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-					</div>
-				</div>
-				<div class="hot-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
+				<div>
+					<div class="hot-content" v-for="item,index in getfree" :key="index">
+						<div class="img-box">
+							<img :src="item.mainImage" alt="">
+						</div>
+						<div class="text">
+							<h5>{{item.title}}</h5>
+							<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
+									class="name">{{item.nickName}}</span></p>
+							<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
+										src="/static/fonticon/kaishi.png" alt="">{{item.commTotal}}人在学</span></p>
+						</div>
 					</div>
 				</div>
 			</scroll-view>
@@ -177,52 +93,16 @@
 			</div>
 			<!-- 内容 -->
 			<div class="con-box">
-				<div class="hot-content">
+				<div class="hot-content" v-for="item,index in getpay" :key="index">
 					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
+						<img :src="item.mainImage" alt="">
 					</div>
 					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
+						<h5>{{item.title}}</h5>
 						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
+								class="name">{{item.nickName}}</span></p>
 						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-					</div>
-				</div>
-				<div class="hot-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-					</div>
-				</div>
-				<div class="hot-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-					</div>
-				</div>
-				<div class="hot-content">
-					<div class="img-box">
-						<img src="/static/images/banner1.jpg" alt="">
-					</div>
-					<div class="text">
-						<h5>做信封纸非建安费安静啊你发空间发你</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">甜甜</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
+									src="/static/fonticon/kaishi.png" alt="">{{item.commTotal}}人在学</span></p>
 					</div>
 				</div>
 			</div>
@@ -231,70 +111,118 @@
 </template>
 
 <script>
-	import { getBanner } from '@/api/index.js'
-	import { reactive,toRefs } from 'vue'
+	import {getpay} from "@/api/index.js"
+	import {getfree} from "@/api/index.js"
+	import {
+		getrecent
+	} from "@/api/index.js"
+	import {
+		getcourse
+	} from "@/api/index.js"
+	import {
+		getnav
+	} from "@/api/index.js"
+	import {
+		reactive,
+		toRefs
+	} from 'vue'
 	export default {
 		setup() {
-			const data=reactive({
-				bannerdata:[] //轮播图数据
+			const data = reactive({
+				Backgrounds: '#006C00',
+				getnav: [], //导航数据
+				getcourse: [], //热门推荐
+				getrecent: [], //近期上新
+				getfree:[],//免费精选
+				getpay:[],//付费精选
 			})
+			// 免费精选
+			getpay().then(res => {
+				data.getpay = res.data.records
+			})
+			// 免费精选
+			getfree().then(res => {
+				data.getfree = res.data.records
+			})
+			// 近期上新数据
+			getrecent().then(res => {
+				data.getrecent = res.data.records
+			})
+			// 导航数据
+			getnav().then(res => {
+				data.getnav = res.data.slice(0, 7)
+			})
+			// 热门推荐
+			getcourse().then(res => {
+				data.getcourse = res.data.records
+			})
+			// 获取传过来的颜色
+			const swiperItem = (e) => {
+				data.Backgrounds = e
+			}
 			// 跳转搜索plus
-			const tosearchplus=()=>{
+			const tosearchplus = () => {
 				uni.navigateTo({
-					url:'/pages/search-plus/search-plus'
+					url: '/pages/search-plus/search-plus'
 				})
 			}
-			// 轮播图数据
-			// getBanner().then(res => {
-			// 	console.log(res);
-			// 	data.bannerdata=res.data
-			// })
 			return {
+				swiperItem,
 				tosearchplus,
-				// ...toRofs(data)
+				...toRefs(data)
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
-	.pay-box{
-	// display: flex;
-		.pay-content{
-			margin-right: 12rpx;
+	scroll-view ::-webkit-scrollbar {
+	   display: none;
+	   width: 0;
+	   height: 0;
+	   color: transparent;
+	  }
+	.pay-box {
+		width: 10000rpx;
+
+		.pay-content {
+			margin-right: 20rpx;
 			float: left;
 			width: 340rpx;
+
 			.img-box {
-				width: 350rpx;
+				width: 330rpx;
+				height: 175rpx;
 				margin: 24rpx;
-			
+
 				img {
-					width: 100%;
+					width: 330rpx;
+					height: 175rpx;
 				}
 			}
-			
+
 			.text {
 				margin: 10rpx 0 20rpx 25rpx;
-			
+
 				h4 {
 					font-family: 600;
 				}
-			
+
 				p {
 					font-size: 18rpx;
 					margin-top: 15rpx;
-			
+
 					img {
 						width: 26rpx;
 						height: 26rpx;
 						padding: 7rpx 5rpx 0 0;
 					}
-			
+
 					.name,
 					.head {
 						color: #aaa;
 					}
-			
+
 					.price {
 						font-size: 20rpx;
 						color: #ff8c65;
@@ -304,6 +232,7 @@
 			}
 		}
 	}
+
 	.hot-box {
 		.hot-title {
 			padding: 10rpx 30rpx;
@@ -336,19 +265,21 @@
 
 		.con-box {
 			// overflow: hidden;
-			width: 1500rpx;
-			
+			width: 1800rpx;
+
 			.hot-content {
 				// float: left;
 				width: 750rpx;
 				display: flex;
 
 				.img-box {
-					width: 350rpx;
+					width: 330rpx;
+					height: 175rpx;
 					margin: 24rpx;
 
 					img {
-						width: 100%;
+						width: 330rpx;
+						height: 175rpx;
 					}
 				}
 

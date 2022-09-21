@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<div class="search-box" @click="tosearch">
+		<div class="search-box" @click="tosearch" :style="`background-color: ${Backgrounds};`">
 			<div>
 				<img src="../../static/sousuo.png" alt="">
 				<p>搜索你想要的内容</p>
@@ -10,9 +10,13 @@
 </template>
 
 <script>
+	import { reactive,toRefs } from "vue"
 	export default {
 		name:"search",
+		props: ['Backgrounds'],
 		setup() {
+			const data=reactive({
+			})
 			// 跳转搜索
 			const tosearch=()=>{
 				uni.navigateTo({
@@ -20,6 +24,7 @@
 				})
 			}
 			return{
+				...toRefs(data),
 				 tosearch
 			}
 		}

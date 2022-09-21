@@ -7,7 +7,7 @@ const instance = axios.create({
 })
 // 请求拦截
 instance.interceptors.request.use((config)=>{
-    console.log('拦截成功');
+    // console.log('拦截成功');
     return config
 },(err)=>{
     return Promise.reject(err)
