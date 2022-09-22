@@ -77,6 +77,16 @@
             }
             
         }
+        ,{
+            "path" : "pages/detail/detail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+            }
+            
+        }
     ],
 	"tabBar": {
 		"list": [

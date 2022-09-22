@@ -14,7 +14,7 @@
 			</div>
 			<!-- 右边 -->
 			<div class="right">
-				<p v-for="obj,index in getcategory[i].labelList" :key="index"
+				<p v-for="obj,index in labelList" :key="index" @click="tosearchplus(obj.name)"
 					>{{obj.name}}</p>
 			</div>
 		</div>
@@ -34,14 +34,23 @@
 			const data = reactive({
 				getcategory: [], //分类所有数据
 				i: 0, //选中的下标
+				labelList:[]
 			})
+			// 跳转搜索plus
+			const tosearchplus=(name)=>{
+				uni.navigateTo({
+					url:`/pages/search-plus/search-plus?content=${name}`,
+				})
+			}
 			// 高亮
 			const tabcategory = (index) => {
 				data.i=index
+				data.labelList=data.getcategory[index].labelList
 			}
 			// 分类所有数据
 			getcategory().then(res => {
 				data.getcategory = res.data
+				data.labelList = res.data[0].labelList
 			})
 			// 跳转搜索
 			const tosearch = () => {
@@ -50,6 +59,7 @@
 				})
 			}
 			return {
+				tosearchplus,
 				tabcategory,
 				tosearch,
 				...toRefs(data)

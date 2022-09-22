@@ -69,7 +69,6 @@
 			})
 			// 导航栏数据
 			tabarticle().then(res => {
-				console.log(res);
 				data.tabarticle = res.data
 			})
 			return {

@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 搜索plus -->
-		<search-plus></search-plus>
+		<search-plus @searchlist="searchlist"></search-plus>
 		<!-- tab栏 -->
 		<div class="nav-tab">
 			<p class="active">课程</p>
@@ -15,76 +15,16 @@
 		</div>
 		<!-- 内容 -->
 		<div class="content">
-			<div class="hot-content">
+			<div class="hot-content" v-for="item,index in searchdata" :key="index" @click="todetail">
 				<div class="img-box">
-					<img src="/static/images/banner1.jpg" alt="">
+					<img :src="item.mainImage" alt="">
 				</div>
 				<div class="text">
-					<h5>做信封纸非建安费安静啊你发空间发你</h5>
+					<h5>{{item.title}}</h5>
 					<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-							class="name">甜甜</span></p>
+							class="name">{{item.nickName}}</span></p>
 					<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-				   				src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-				</div>
-			</div>
-			<div class="hot-content">
-				<div class="img-box">
-					<img src="/static/images/banner1.jpg" alt="">
-				</div>
-				<div class="text">
-					<h5>做信封纸非建安费安静啊你发空间发你</h5>
-					<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-							class="name">甜甜</span></p>
-					<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-								src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-				</div>
-			</div>
-			<div class="hot-content">
-				<div class="img-box">
-					<img src="/static/images/banner1.jpg" alt="">
-				</div>
-				<div class="text">
-					<h5>做信封纸非建安费安静啊你发空间发你</h5>
-					<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-							class="name">甜甜</span></p>
-					<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-								src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-				</div>
-			</div>
-			<div class="hot-content">
-				<div class="img-box">
-					<img src="/static/images/banner1.jpg" alt="">
-				</div>
-				<div class="text">
-					<h5>做信封纸非建安费安静啊你发空间发你</h5>
-					<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-							class="name">甜甜</span></p>
-					<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-								src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-				</div>
-			</div>
-			<div class="hot-content">
-				<div class="img-box">
-					<img src="/static/images/banner1.jpg" alt="">
-				</div>
-				<div class="text">
-					<h5>做信封纸非建安费安静啊你发空间发你</h5>
-					<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-							class="name">甜甜</span></p>
-					<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-								src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
-				</div>
-			</div>
-			<div class="hot-content">
-				<div class="img-box">
-					<img src="/static/images/banner1.jpg" alt="">
-				</div>
-				<div class="text">
-					<h5>做信封纸非建安费安静啊你发空间发你</h5>
-					<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-							class="name">甜甜</span></p>
-					<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-								src="/static/fonticon/kaishi.png" alt="">164人在学</span></p>
+								src="/static/fonticon/kaishi.png" alt="">{{item.commTotal}}人在学</span></p>
 				</div>
 			</div>
 		</div>
@@ -92,12 +32,36 @@
 </template>
 
 <script>
+	import { useRoute } from 'vue-router'
+	import { reactive,toRefs } from 'vue'
+	import {search} from "@/api/search.js"
 	export default {
-		data() {
+		setup() {
+			const route=useRoute()
+			const data=reactive({
+				searchdata:[]
+			})
+			// 搜索数据
+			const searchlist=(arr)=>{
+				data.searchdata=arr
+				console.log(arr);
+			}
+			// 跳转详情
+			const todetail=()=>{
+				uni.navigateTo({
+					url:'/pages/detail/detail'
+				})
+			}
+			// 搜索
+			search(route.query.content).then(res=>{
+				data.searchdata=res.data.records
+			})
 			return {
-
-			};
-		}
+				searchlist,
+				todetail,
+				...toRefs(data)
+			}
+		},
 	}
 </script>
 
@@ -145,11 +109,13 @@
 		display: flex;
 
 		.img-box {
-			width: 350rpx;
+			width: 330rpx;
+			height: 175rpx;
 			margin: 24rpx;
-
+		
 			img {
-				width: 100%;
+				width: 330rpx;
+				height: 175rpx;
 			}
 		}
 

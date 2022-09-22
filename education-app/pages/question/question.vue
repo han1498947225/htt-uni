@@ -50,7 +50,6 @@
 			}
 			// 热门回答
 			hotanswer().then(res=>{
-				console.log(res);
 				data.hotdata=res.data.records
 			})
 			return {

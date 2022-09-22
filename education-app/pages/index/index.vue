@@ -3,10 +3,10 @@
 		<!-- 搜索组件 -->
 		<search :Backgrounds="Backgrounds"></search>
 		<!-- 轮播图 -->
-		<banner @swiperItem="swiperItem"></banner>
+		<banner @swiperItem="swiperItem" @click="todetail"></banner>
 		<!-- nav -->
 		<div class="nav-box">
-			<div v-for="item,index in getnav" :key="index">{{item.name}}</div>
+			<div v-for="item,index in getnav" :key="index" @click="tosearchplus(item.name)">{{item.name}}</div>
 			<div>全部分类</div>
 		</div>
 		<!-- 热门推荐 -->
@@ -19,7 +19,7 @@
 			<!-- 内容 -->
 			<scroll-view class="con-box" scroll-x="true">
 				<div>
-					<div class="hot-content" v-for="item,index in getcourse" :key="index">
+					<div class="hot-content" v-for="item,index in getcourse" :key="index" @click="todetail">
 						<div class="img-box">
 							<img :src="item.mainImage" alt="">
 						</div>
@@ -44,18 +44,18 @@
 			<!-- 内容 -->
 			<scroll-view scroll-x="true">
 				<div class="pay-box">
-				<div class="pay-content" v-for="item,index in getrecent" :key="index">
-					<div class="img-box">
-						<img :src="item.mainImage" alt="">
+					<div class="pay-content" v-for="item,index in getrecent" :key="index" @click="todetail">
+						<div class="img-box">
+							<img :src="item.mainImage" alt="">
+						</div>
+						<div class="text">
+							<h5>{{item.title}}</h5>
+							<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
+									class="name">{{item.nickName}}</span></p>
+							<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
+										src="/static/fonticon/kaishi.png" alt="">{{item.commTotal}}人在学</span></p>
+						</div>
 					</div>
-					<div class="text">
-						<h5>{{item.title}}</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">{{item.nickName}}</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">{{item.commTotal}}人在学</span></p>
-					</div>
-				</div>
 				</div>
 			</scroll-view>
 		</div>
@@ -69,7 +69,7 @@
 			<!-- 内容 -->
 			<scroll-view class="con-box" scroll-x="true">
 				<div>
-					<div class="hot-content" v-for="item,index in getfree" :key="index">
+					<div class="hot-content" v-for="item,index in getfree" :key="index" @click="todetail">
 						<div class="img-box">
 							<img :src="item.mainImage" alt="">
 						</div>
@@ -93,7 +93,7 @@
 			</div>
 			<!-- 内容 -->
 			<div class="con-box">
-				<div class="hot-content" v-for="item,index in getpay" :key="index">
+				<div class="hot-content" v-for="item,index in getpay" :key="index" @click="todetail">
 					<div class="img-box">
 						<img :src="item.mainImage" alt="">
 					</div>
@@ -111,8 +111,12 @@
 </template>
 
 <script>
-	import {getpay} from "@/api/index.js"
-	import {getfree} from "@/api/index.js"
+	import {
+		getpay
+	} from "@/api/index.js"
+	import {
+		getfree
+	} from "@/api/index.js"
 	import {
 		getrecent
 	} from "@/api/index.js"
@@ -133,9 +137,21 @@
 				getnav: [], //导航数据
 				getcourse: [], //热门推荐
 				getrecent: [], //近期上新
-				getfree:[],//免费精选
-				getpay:[],//付费精选
+				getfree: [], //免费精选
+				getpay: [], //付费精选
 			})
+			// 跳转详情
+			const todetail = () => {
+				uni.navigateTo({
+					url: '/pages/detail/detail'
+				})
+			}
+			// 跳转搜索plus
+			const tosearchplus = (name) => {
+				uni.navigateTo({
+					url: `/pages/search-plus/search-plus?content=${name}`,
+				})
+			}
 			// 免费精选
 			getpay().then(res => {
 				data.getpay = res.data.records
@@ -160,15 +176,10 @@
 			const swiperItem = (e) => {
 				data.Backgrounds = e
 			}
-			// 跳转搜索plus
-			const tosearchplus = () => {
-				uni.navigateTo({
-					url: '/pages/search-plus/search-plus'
-				})
-			}
 			return {
-				swiperItem,
+				todetail,
 				tosearchplus,
+				swiperItem,
 				...toRefs(data)
 			}
 		}
@@ -177,11 +188,12 @@
 
 <style lang="scss">
 	scroll-view ::-webkit-scrollbar {
-	   display: none;
-	   width: 0;
-	   height: 0;
-	   color: transparent;
-	  }
+		display: none;
+		width: 0;
+		height: 0;
+		color: transparent;
+	}
+
 	.pay-box {
 		width: 10000rpx;
 

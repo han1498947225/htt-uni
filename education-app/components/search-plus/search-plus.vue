@@ -2,7 +2,7 @@
 	<view>
 		<div class="search-box">
 			<img src="/static/fonticon/fanhui.png" alt="" @click="back">
-			<input type="text" placeholder="搜索你想要的内容">
+			<input type="text" placeholder="搜索你想要的内容" @blur="searchdata" v-model="content">
 			<img src="/static/sousuo.png" alt="" class="img">
 			<span @click="back">取消</span>
 		</div>
@@ -10,9 +10,27 @@
 </template>
 
 <script>
+	import { reactive,toRefs } from 'vue'
+ 	import {search} from '@/api/search.js'
 	export default {
 		name: "search-plus",
-		setup() {
+		setup(props,ctx) {
+			const data=reactive({
+				content:''
+			})
+			// 失焦事件
+			const searchdata=()=>{
+				if(data.content!=''){
+					search(data.content).then(res=>{
+						// console.log(res);
+						ctx.emit('searchlist',res.data.records)
+						
+					})
+				}
+				else{
+					return false
+				}
+			}
 			// 返回上一级
 			const back = () => {
 				uni.navigateBack({
@@ -20,6 +38,8 @@
 				})
 			}
 			return {
+				...toRefs(data),
+				searchdata,
 				back
 			}
 		}

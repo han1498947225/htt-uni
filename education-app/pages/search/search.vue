@@ -9,7 +9,7 @@
 		</div>
 		<p><span>历史搜索</span><span @click="clear">清空</span></p>
 		<div class="box">
-			<div class="item" v-for="item,index in historylist" :key="index">{{item}}</div>
+			<div class="item" v-for="item,index in historylist" :key="index" @click="hotsearch(item)">{{item}}</div>
 		</div>
 	</view>
 </template>
@@ -24,6 +24,10 @@
 			})
 			// 点击
 			const hotsearch=(obj)=>{
+				// 跳转搜索plus
+				uni.navigateTo({
+					url:`/pages/search-plus/search-plus?content=${obj}`,
+				})
 				if(data.historylist.find(item=>item==obj)){
 					return false
 				}
