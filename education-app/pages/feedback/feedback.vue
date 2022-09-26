@@ -1,17 +1,12 @@
 <template>
 	<view>
-		<!-- 顶部 -->
-		<div class="top">
-			<img src="/static/fonticon/fanhui.png" alt="" @click="tomy">
-			<span>意见反馈</span>
-		</div>
 		<!-- 表单 -->
 		<form @submit="formSubmit">
 			<!-- 单选框 -->
 			<view class="uni-form-item uni-column" style="margin:50rpx 90rpx;">
 				<radio-group name="radio" class="radio">
 					<label>
-						<radio value="内容意见" /><text style="margin-right: 30rpx;">内容意见</text>
+						<radio value="内容意见" checked="true" /><text style="margin-right: 30rpx;">内容意见</text>
 					</label>
 					<label>
 						<radio value="产品建议" /><text style="margin-right: 30rpx;">产品建议</text>
@@ -47,23 +42,62 @@
 	export default {
 		setup() {
 			// 返回
-			const tomy=()=>{
+			const tomy = () => {
 				uni.navigateBack({
-					delta:1
+					delta: 1
 				})
 			}
 			// 提交
 			const formSubmit = (e) => {
 				var formdata = e.detail.value
+				// 判空
 				if (formdata.fannum == '' || formdata.qqnum == '' || formdata.weixinnum == '' || formdata.radio ==
 					'') {
 					uni.showToast({
 						title: '输入不能为空',
 						duration: 2000,
-						icon: "error"
+						icon: "none"
 					})
-				}else{
-				
+				} else {
+					var fannum = /^[\u4E00-\u9FA5]{10,}$/
+					var qqnum = /^[1-9][0-9][1-9]{1,10}$/
+					var weixinnum = /^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/
+					// 内容正则
+					if (!fannum.test(formdata.fannum)) {
+						uni.showToast({
+							title: '内容必须在10个字符',
+							duration: 2000,
+							icon: "none"
+						})
+						// QQ号正则
+					} else if (!qqnum.test(formdata.qqnum)) {
+						uni.showToast({
+							title: 'qq号不规范',
+							duration: 2000,
+							icon: "none"
+						})
+						// 微信正则
+					} else if (!weixinnum.test(formdata.weixinnum)) {
+						uni.showToast({
+							title: '微信号不规范',
+							duration: 2000,
+							icon: "none"
+						})
+					} else {
+						// 反馈成功
+						uni.showModal({
+							showCancel: false,
+							content: '您的意见反馈已经成功',
+							success: function(res) {
+								if (res.confirm) {
+									console.log('用户点击确定');
+								} else if (res.cancel) {
+									console.log('用户点击取消');
+								}
+							}
+						});
+					}
+
 				}
 			}
 			return {

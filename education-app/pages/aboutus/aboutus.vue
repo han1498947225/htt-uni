@@ -1,9 +1,5 @@
 <template>
 	<view>
-		<div class="top">
-			<img src="/static/fonticon/fanhui.png" alt="" @click="backabout">
-			<span>关于梦学谷</span>
-		</div>
 		<div class="logo-box">
 			<img src="/static/images/logo-black.png" alt="">
 		</div>

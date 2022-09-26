@@ -7,7 +7,10 @@ const instance = axios.create({
 })
 // 请求拦截
 instance.interceptors.request.use((config)=>{
-    // console.log('拦截成功');
+    console.log('拦截成功');
+	uni.showLoading({
+		title:"加载中"
+	})
     return config
 },(err)=>{
     return Promise.reject(err)
@@ -17,6 +20,7 @@ instance.interceptors.request.use((config)=>{
 // 响应拦截
 instance.interceptors.response.use((res)=>{
     // console.log(res);//后端响应的数据
+	uni.hideLoading()
     return res
 },(err)=>{
     return Promise.reject(err)

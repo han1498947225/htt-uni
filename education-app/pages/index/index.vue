@@ -1,192 +1,224 @@
 <template>
-	<view>
-		<!-- 搜索组件 -->
-		<search :Backgrounds="Backgrounds"></search>
+	<view class="content">
+		
+		<search class="search" :Background="Background"></search>
+		<!-- 回到顶部 -->
+		<image class="top-pic" src="../../static/images/top.png" mode="" v-show="flag" @click="touchTop"></image>
 		<!-- 轮播图 -->
-		<banner @swiperItem="swiperItem" @click="todetail"></banner>
-		<!-- nav -->
-		<div class="nav-box">
-			<div v-for="item,index in getnav" :key="index" @click="tosearchplus(item.name)">{{item.name}}</div>
-			<div>全部分类</div>
-		</div>
-		<!-- 热门推荐 -->
-		<div class="hot-box">
-			<!-- 标题 -->
-			<div class="hot-title">
-				<p><span class="title">热门推荐</span><span class="tag">HOT</span></p>
-				<p class="more">全部 ></p>
-			</div>
-			<!-- 内容 -->
-			<scroll-view class="con-box" scroll-x="true">
-				<div>
-					<div class="hot-content" v-for="item,index in getcourse" :key="index" @click="todetail">
-						<div class="img-box">
-							<img :src="item.mainImage" alt="">
-						</div>
-						<div class="text">
-							<h5>{{item.title}}</h5>
-							<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-									class="name">{{item.nickName}}</span></p>
-							<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-										src="/static/fonticon/kaishi.png" alt="">{{item.commTotal}}人在学</span></p>
-						</div>
-					</div>
-				</div>
-			</scroll-view>
-		</div>
-		<!-- 近期上新 -->
-		<div class="hot-box">
-			<!-- 标题 -->
-			<div class="hot-title">
-				<p><span class="title">近期上新</span><span class="tag">NEW</span></p>
-				<p class="more">全部 ></p>
-			</div>
-			<!-- 内容 -->
+		<banner @swiperItem="swiperItem"></banner>
+		<!-- 分类搜索 -->
+		<view class="cate-box">
+			<view v-for="item in cateNav.slice(0,7)" :key="item.id"
+				@click="toContentView(item.name)">{{item.name}}</view>
+			<view @click="toContentView('全部分类')">
+				全部分类
+			</view>
+		</view>
+		<view class="list-container">
+			<!-- 热门推荐 -->
+			<view class="header">
+				<view class="left">
+					<view class="left-text">
+						热门推荐
+					</view>
+					<view class="hot-text">
+						HOT
+					</view>
+				</view>
+				<view class="right">
+					全部 >
+				</view>
+			</view>
+			<!-- 商品列表 -->
 			<scroll-view scroll-x="true">
-				<div class="pay-box">
-					<div class="pay-content" v-for="item,index in getrecent" :key="index" @click="todetail">
-						<div class="img-box">
-							<img :src="item.mainImage" alt="">
-						</div>
-						<div class="text">
-							<h5>{{item.title}}</h5>
-							<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-									class="name">{{item.nickName}}</span></p>
-							<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-										src="/static/fonticon/kaishi.png" alt="">{{item.commTotal}}人在学</span></p>
-						</div>
-					</div>
-				</div>
+				<view>
+					<courseView :hotList="hotList"></courseView>
+				</view>
 			</scroll-view>
-		</div>
-		<!-- 免费精选-->
-		<div class="hot-box">
-			<!-- 标题 -->
-			<div class="hot-title">
-				<p><span class="title">免费精选</span><span class="tag">FREE</span></p>
-				<p class="more">全部 ></p>
-			</div>
-			<!-- 内容 -->
-			<scroll-view class="con-box" scroll-x="true">
-				<div>
-					<div class="hot-content" v-for="item,index in getfree" :key="index" @click="todetail">
-						<div class="img-box">
-							<img :src="item.mainImage" alt="">
-						</div>
-						<div class="text">
-							<h5>{{item.title}}</h5>
-							<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-									class="name">{{item.nickName}}</span></p>
-							<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-										src="/static/fonticon/kaishi.png" alt="">{{item.commTotal}}人在学</span></p>
-						</div>
-					</div>
-				</div>
+
+			<!-- 近期上新 -->
+			<view class="header">
+				<view class="left">
+					<view class="left-text">
+						近期上新
+					</view>
+					<view class="hot-text">
+						NEW
+					</view>
+				</view>
+				<view class="right">
+					全部 >
+				</view>
+			</view>
+			<!-- 商品列表 -->
+			<scroll-view scroll-x="true" :show-scrollbar="false">
+				<view class="content-box">
+					<newCourse :newList="newList"></newCourse>
+				</view>
 			</scroll-view>
-		</div>
-		<!-- 付费精选-->
-		<div class="hot-box">
-			<!-- 标题 -->
-			<div class="hot-title">
-				<p><span class="title">付费精选</span><span class="tag">NICE</span></p>
-				<p class="more">全部 ></p>
-			</div>
-			<!-- 内容 -->
-			<div class="con-box">
-				<div class="hot-content" v-for="item,index in getpay" :key="index" @click="todetail">
-					<div class="img-box">
-						<img :src="item.mainImage" alt="">
-					</div>
-					<div class="text">
-						<h5>{{item.title}}</h5>
-						<p><span class="head"><img src="/static/fonticon/touxiang.png" alt=""></span><span
-								class="name">{{item.nickName}}</span></p>
-						<p><span class="price"><img src="/static/fonticon/qiandai.png" alt="">免费</span><span><img
-									src="/static/fonticon/kaishi.png" alt="">{{item.commTotal}}人在学</span></p>
-					</div>
-				</div>
-			</div>
-		</div>
+
+			<!-- 免费精选 -->
+			<view class="header">
+				<view class="left">
+					<view class="left-text">
+						免费精选
+					</view>
+					<view class="hot-text">
+						FREE
+					</view>
+				</view>
+				<view class="right">
+					全部 >
+				</view>
+			</view>
+			<!-- 商品列表 -->
+			<courseView :hotList="freeList"></courseView>
+			<!-- 付费精品 -->
+			<view class="header">
+				<view class="left">
+					<view class="left-text">
+						付费精品
+					</view>
+					<view class="hot-text">
+						NICE
+					</view>
+				</view>
+				<view class="right">
+					全部 >
+				</view>
+			</view>
+			<!-- 商品列表 -->
+			<courseView :hotList="niceList"></courseView>
+		</view>
+		
 	</view>
 </template>
 
 <script>
 	import {
-		getpay
-	} from "@/api/index.js"
-	import {
-		getfree
-	} from "@/api/index.js"
-	import {
-		getrecent
-	} from "@/api/index.js"
-	import {
-		getcourse
-	} from "@/api/index.js"
-	import {
-		getnav
-	} from "@/api/index.js"
+		getCateNav,
+		getHotList,
+		getNewList,
+		getFreeList,
+		getNiceList
+	} from '@/utils/http.js'
 	import {
 		reactive,
 		toRefs
-	} from 'vue'
+	} from "vue";
+	import {
+		onReachBottom,
+		onPageScroll
+	} from '@dcloudio/uni-app'
 	export default {
 		setup() {
 			const data = reactive({
-				Backgrounds: '#006C00',
-				getnav: [], //导航数据
-				getcourse: [], //热门推荐
-				getrecent: [], //近期上新
-				getfree: [], //免费精选
-				getpay: [], //付费精选
+				cateNav: [], //分类导航
+				hotList: [], //热门推荐
+				newList: [], //近期上新
+				freeList: [], //免费推荐
+				niceList: [], //付费推荐
+				current: 1,
+				size: 10,
+				flag:false,
+				scroll:0,
+				Background: "#006C00"
 			})
-			// 跳转详情
-			const todetail = () => {
-				uni.navigateTo({
-					url: '/pages/detail/detail'
-				})
-			}
-			// 跳转搜索plus
-			const tosearchplus = (name) => {
-				uni.navigateTo({
-					url: `/pages/search-plus/search-plus?content=${name}`,
-				})
-			}
-			// 免费精选
-			getpay().then(res => {
-				data.getpay = res.data.records
+			// 分类导航栏
+			getCateNav().then(res => {
+				// console.log(res);
+				if (res.code == 20000) {
+					data.cateNav = res.data
+				}
 			})
-			// 免费精选
-			getfree().then(res => {
-				data.getfree = res.data.records
+			// 热门推荐数据
+			getHotList().then(res => {
+				// console.log(res);
+				if (res.code == 20000) {
+					data.hotList = res.data.records
+				}
 			})
 			// 近期上新数据
-			getrecent().then(res => {
-				data.getrecent = res.data.records
+			getNewList().then(res => {
+				// console.log(res);
+				if (res.code == 20000) {
+					data.newList = res.data.records
+				}
 			})
-			// 导航数据
-			getnav().then(res => {
-				data.getnav = res.data.slice(0, 7)
+			// 免费推荐数据
+			getFreeList().then(res => {
+				// console.log(res);
+				if (res.code == 20000) {
+					data.freeList = res.data.records
+				}
 			})
-			// 热门推荐
-			getcourse().then(res => {
-				data.getcourse = res.data.records
+			// 付费推荐数据
+			getNiceList(data.current, data.size).then(res => {
+				// console.log(data.current, data.size);
+				// console.log(res);
+				if (res.code == 20000) {
+					if (data.current == 1) {
+						data.niceList = res.data.records
+					} else {
+						data.niceList = [...data.niceList, ...res.data.records]
+					}
+
+				}
 			})
-			// 获取传过来的颜色
-			const swiperItem = (e) => {
-				data.Backgrounds = e
+			// 上拉加载
+			onReachBottom(() => {
+				data.current++
+				getNiceList(data.current, data.size).then(res => {
+					// console.log(data.current, data.size);
+					// console.log(res);
+					if (res.code == 20000) {
+						if (data.current == 1) {
+							data.niceList = res.data.records
+						} else {
+							data.niceList = [...data.niceList, ...res.data.records]
+						}
+
+					}
+				})
+				console.log(data.current);
+			});
+			// 监听页面滚动
+			onPageScroll((e) => {
+				// console.log(e.scrollTop);
+				data.scroll=e.scrollTop
+				if(e.scrollTop>=1200){
+					data.flag=true
+				}else{
+					data.flag=false
+				}
+			})
+			// 回到顶部
+			const touchTop=()=>{
+				uni.pageScrollTo({
+					scrollTop: 0
+				})
+			}
+			// 去课程页面
+			const toContentView=(name)=>{
+				console.log(name);
+				uni.navigateTo({
+					url:`/pages/contentView/contentView?name=${name}`
+				})
+			}
+			const swiperItem = (bgc) => {
+				data.Background = bgc
 			}
 			return {
-				todetail,
-				tosearchplus,
-				swiperItem,
-				...toRefs(data)
+				...toRefs(data),
+				touchTop,
+				toContentView,
+				swiperItem
 			}
-		}
+		},
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	scroll-view ::-webkit-scrollbar {
 		display: none;
 		width: 0;
@@ -194,154 +226,95 @@
 		color: transparent;
 	}
 
-	.pay-box {
-		width: 10000rpx;
-
-		.pay-content {
-			margin-right: 20rpx;
-			float: left;
-			width: 340rpx;
-
-			.img-box {
-				width: 330rpx;
-				height: 175rpx;
-				margin: 24rpx;
-
-				img {
-					width: 330rpx;
-					height: 175rpx;
-				}
-			}
-
-			.text {
-				margin: 10rpx 0 20rpx 25rpx;
-
-				h4 {
-					font-family: 600;
-				}
-
-				p {
-					font-size: 18rpx;
-					margin-top: 15rpx;
-
-					img {
-						width: 26rpx;
-						height: 26rpx;
-						padding: 7rpx 5rpx 0 0;
-					}
-
-					.name,
-					.head {
-						color: #aaa;
-					}
-
-					.price {
-						font-size: 20rpx;
-						color: #ff8c65;
-						margin-right: 50rpx;
-					}
-				}
-			}
-		}
-	}
-
-	.hot-box {
-		.hot-title {
-			padding: 10rpx 30rpx;
-			height: 80rpx;
-			line-height: 80rpx;
-			display: flex;
-			justify-content: space-between;
-
-			.title {
-				font-size: 19px;
-				font-weight: 500;
-				color: #303133;
-			}
-
-			.tag {
-				margin: 0 10rpx;
-				font-size: 10px;
-				background-image: -webkit-linear-gradient(left, #fb6932, #fa140e);
-				background-image: linear-gradient(90deg, #fb6932, #fa140e);
-				color: #fff;
-				padding: 0 5px;
-				border-radius: 15px 15px 15px 0;
-			}
-
-			.more {
-				color: #aaa;
-			}
-
-		}
-
-		.con-box {
-			// overflow: hidden;
-			width: 1800rpx;
-
-			.hot-content {
-				// float: left;
-				width: 750rpx;
-				display: flex;
-
-				.img-box {
-					width: 330rpx;
-					height: 175rpx;
-					margin: 24rpx;
-
-					img {
-						width: 330rpx;
-						height: 175rpx;
-					}
-				}
-
-				.text {
-					margin: 20rpx 20rpx 20rpx 0;
-
-					h4 {
-						font-family: 600;
-					}
-
-					p {
-						font-size: 18rpx;
-						margin-top: 15rpx;
-
-						img {
-							width: 26rpx;
-							height: 26rpx;
-							padding: 7rpx 5rpx 0 0;
-						}
-
-						.name,
-						.head {
-							color: #aaa;
-						}
-
-						.price {
-							font-size: 20rpx;
-							color: #ff8c65;
-							margin-right: 50rpx;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	.nav-box {
+	.header {
+		width: 100%;
 		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-evenly;
+		justify-content: space-between;
+		padding: 2% 4%;
+		box-sizing: border-box;
 
-		div {
-			width: 20%;
-			height: 50rpx;
-			background-color: #f8f9fa;
-			text-align: center;
-			line-height: 50rpx;
-			margin: 15rpx 10rpx;
-			border-radius: 15rpx;
-			font-size: 16rpx;
+		.left {
+			view {
+				float: left;
+			}
+
+			.left-text {
+				font-size: 40rpx;
+				color: #474a49;
+			}
+
+			.hot-text {
+				font-size: 24rpx;
+				text-align: center;
+				width: 80rpx;
+				height: 40rpx;
+				line-height: 40rpx;
+				background-image: linear-gradient(to right, #fb6731, #fa1b11);
+				color: white;
+				border-radius: 20rpx;
+				border-bottom-left-radius: 5rpx;
+
+			}
 		}
+
+		.right {
+			color: #7a7a7a;
+		}
+	}
+
+	.content-box {
+		margin: 30rpx 0;
+	}
+
+	// 分类区域
+	.list-container {
+		.content-box {
+			display: flex;
+			width: 266vh;
+		}
+	}
+
+	.header {
+		margin-top: 20rpx;
+	}
+
+	.cate-box {
+		width: 100%;
+		display: flex;
+		justify-content: space-around;
+		flex-wrap: wrap;
+		align-items: center;
+		box-sizing: border-box;
+		margin: 5% 0;
+
+		view {
+			width: 23%;
+			margin: 1%;
+			height: 70rpx;
+			line-height: 70rpx;
+			border-radius: 12rpx;
+			text-align: center;
+			font-size: 26rpx;
+			background-color: #f8f9fb;
+		}
+	}
+
+	.content {
+		width: 100%;
+		position: relative;
+	}
+	.top-pic {
+		position: fixed;
+		bottom: 15%;
+		right: 5%;
+		width: 100rpx;
+		height: 100rpx;
+		z-index: 33;
+	}
+
+	.search {
+		position: sticky;
+		top: 0;
+		z-index: 1;
 	}
 </style>
