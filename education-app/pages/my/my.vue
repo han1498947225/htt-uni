@@ -29,14 +29,14 @@
 					<div>设置</div>
 					<p>></p>
 				</div>
-				<div class="my">
+				<div class="my" @click="tofeedback">
 					<img src="/static/fonticon/labagonggao.png" alt="">
 					<div>意见反馈</div>
 					<p>></p>
 				</div>
 			</div>
 			<div class="my-item">
-				<div class="my">
+				<div class="my" @click="toaboutus">
 					<img src="/static/fonticon/guanyuwomen.png" alt="">
 					<div>关于我们</div>
 					<p>></p>
@@ -48,10 +48,24 @@
 
 <script>
 	export default {
-		data() {
+		setup(){
+			
+			// 跳转意见反馈
+			const tofeedback=()=>{
+				uni.navigateTo({
+					url:'/pages/feedback/feedback'
+				})
+			}
+			// 跳转关于我们
+			const toaboutus=()=>{
+				uni.navigateTo({
+					url:'/pages/aboutus/aboutus'
+				})
+			}
 			return {
-				
-			};
+				tofeedback,
+				toaboutus
+			}
 		}
 	}
 </script>
